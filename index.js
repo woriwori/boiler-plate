@@ -4,6 +4,8 @@ const port = 5000
 const bodyParser = require('body-parser')
 const {User} = require('./model/User')
 
+const config = require('./config/key')
+
 // application/x-www-form-urlencoded로 되어있는 데이터를 분석해서 가져올 수 있도록 해줌.
 app.use(bodyParser.urlencoded({extended: true})) 
 
@@ -11,7 +13,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
 const mongoose = require('mongoose')
-mongoose.connect('mongodb+srv://wonhee:dnjsdnjf12@boilerplate.7mhbn.mongodb.net/boilerplate?retryWrites=true&w=majority', {
+mongoose.connect(config.mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
