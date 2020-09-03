@@ -3,6 +3,7 @@ const app = express();
 const port = 5000;
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const { auth } = require('./middleware/auth');
 const { User } = require('./model/User');
 
 const config = require('./config/key');
@@ -27,7 +28,7 @@ mongoose
 
 app.get('/', (req, res) => res.send('Hello, World!'));
 
-app.post('/register', (req, res) => {
+app.post('/api/users/register', (req, res) => {
     // 회원가입할 때 필요한 정보들을 client에서 가져오면
     // 그것들을 데이터 베이스에 넣어준다.
     const user = new User(req.body);
@@ -41,7 +42,7 @@ app.post('/register', (req, res) => {
     });
 });
 
-app.post('/login', (req, res) => {
+app.post('/api/users/login', (req, res) => {
     const { email, password } = req.body;
 
     // 1. 요청된 이메일을 db에서 찾는다.
@@ -69,6 +70,21 @@ app.post('/login', (req, res) => {
                 res.cookie('x_auth', user.token).status(200).json({ loginSuccess: true, userId: user._id });
             });
         });
+    });
+});
+
+// auth : 콜백 실행전 뭔가를 할 수 있게 해주는 미들웨어
+app.get('/api/users/auth', auth, (req, res) => {
+    // 여기까지 왔다는 건 인증통과(=middleware(auth)를 통과)라는 뜻
+    const { _id, role, email, name, lastname, image } = req.user;
+    res.status(200).json({
+        _id,
+        isAdmin: role !== 0, // 0: 일반유저, 1: 관리자
+        isAuth: true,
+        email,
+        name,
+        lastname,
+        image,
     });
 });
 
