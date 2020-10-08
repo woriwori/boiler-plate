@@ -1,7 +1,12 @@
-import Axios from 'axios';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../../_actions/user_action';
 
-function LoginPage() {
+function LoginPage(props) {
+    // axios
+    //     .post('/api/users/register', { name: 'wonhee1', email: 'wonhee1@naver.com', password: 'wonhee1234!', role: 0 })
+    //     .then((response) => console.log(response));
+    const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -14,11 +19,18 @@ function LoginPage() {
     const onSubmitHandler = (e) => {
         e.preventDefault();
         console.log('Email', email);
-        let body = {
+        const body = {
             email,
             password,
         };
-        Axios.post('/api/users/login', body).then((response) => {});
+        dispatch(loginUser(body)).then((response) => {
+            console.log(response);
+            if (response.payload.loginSuccess) {
+                props.history.push('/'); // react에서 페이지 이동하는 방법
+            } else {
+                alert('error');
+            }
+        });
     };
 
     return (
