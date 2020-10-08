@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
-import { applyMiddleware } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 
 // redux 사용에 도움을 주는 미들웨어
 import promiseMiddleware from 'redux-promise';
